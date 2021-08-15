@@ -114,7 +114,7 @@ const Home =  withLog(({ log }) => {
 		log.event('screen', { name:  'Home' })
 	}, [])
 
-return <h1>Home</h1>
+	return <h1>Home</h1>
 })
 ```
 
