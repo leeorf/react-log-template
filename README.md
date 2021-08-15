@@ -1,3 +1,4 @@
+
 <div align="center" >
   <h1>React Log Template</h1>
   <div>
@@ -68,19 +69,18 @@ $ yarn
 $ yarn dev
 ```
 
-The default template uses the browser console as the logging implementation just to illustrate. You can:
+The default template uses the browser console as the logging implementation just to illustrate. 
+## Implement
 
 ### Build your own logging implementation
 
-If you want to implement your own logging, just ensure that the class you build implements `Analytics` and/or `ErrorAnalytics` interfaces:
+If you want to implement your own logging, just ensure that the class you build implements these interfaces: `Analytics` or `ErrorAnalytics` or both (to use the same strategy to log normal analytics and errors) :
 
 ```bash
 # Go to implementation repository
-$ touch src/infra/log/implementations
-
-# Create a class that fits your needs
-
+$ cd src/infra/log/implementations
 ```
+ Now create a class that fits your needs.
 
 ### Use some third party lib
 
@@ -88,10 +88,36 @@ If you want to use a third party lib, you can use adapter to translate the data 
 
 ```bash
 # Go to adapters repository
-$ touch src/infra/log/implementations/adapters
-
-# Create a class that fits your needs using any third party lib
+$ cd src/infra/log/implementations/adapters
 ```
+Create a class that fits your needs using any third party lib.
+
+## Dependency Injection
+```bash
+# Open the High Order Component
+$ code src/presentation/components/hoc/withLog.tsx
+```
+Here you can compose your error and analytics logging as you want. The example below uses `ConsoleAnalytics` instance to log either the error and the regular analytics.
+> Note that you can use more than one logging strategy thanks to Composite Pattern
+```javascript
+const errorAnalyticsComposite =  new  ErrorAnalyticsComposite([new  ConsoleAnalytics()]);
+
+const analyticsComposite =  new  AnalyticsComposite([new  ConsoleAnalytics()])
+```
+
+## Use HOC on demand
+
+Now you just need to wrap your component with the `withLog` HOC, and your component will have the log to invoke.
+```javascript
+const Home =  withLog(({ log }) => {
+	useEffect(() => {
+		log.event('screen', { name:  'Home' })
+	}, [])
+
+return <h1>Home</h1>
+})
+```
+
 
 # How to contribute
 
